@@ -153,11 +153,10 @@ const App: React.FC = () => {
     });
   };
 
-  const scrollToGallery = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const gallerySection = document.getElementById('gallery');
-    if (gallerySection) {
-      gallerySection.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -336,7 +335,7 @@ const App: React.FC = () => {
               Luxury Living in the Heart of the City
             </p>
             <button 
-              onClick={scrollToGallery}
+              onClick={() => scrollToSection('gallery')}
               className="bg-white/90 backdrop-blur-sm text-gray-900 px-8 sm:px-10 py-4 rounded-full text-lg sm:text-xl font-medium hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               View Arc Homes
@@ -447,7 +446,7 @@ const App: React.FC = () => {
               {
                 title: 'Game Room & Lounge',
                 description: 'Perfect space for entertainment',
-                icon: '��'
+                icon: ''
               },
               {
                 title: 'Private Mini Theater',
