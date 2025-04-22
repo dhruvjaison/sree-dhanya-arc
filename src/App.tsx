@@ -487,7 +487,7 @@ const App: React.FC = () => {
       </section>
 
       {/* Location Section */}
-      <section className="py-16 sm:py-20 bg-white px-4 sm:px-6 lg:px-8">
+      <section id="location" className="py-16 sm:py-20 bg-white px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-primary mb-8 sm:mb-12">
             Prime Location
