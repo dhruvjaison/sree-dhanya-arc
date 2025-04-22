@@ -293,9 +293,13 @@ const App: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
               </div>
             </button>
-            <button className="bg-accent text-white px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold hover:bg-blue-600 transition duration-300">
-              Enquire Now
-            </button>
+            <div className="flex items-center space-x-4">
+              <a href="#gallery" className="text-gray-900 hover:text-gray-600 transition-colors">Gallery</a>
+              <a href="#location" className="text-gray-900 hover:text-gray-600 transition-colors">Location</a>
+              <button className="bg-accent text-white px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold hover:bg-blue-600 transition duration-300">
+                Enquire Now
+              </button>
+            </div>
           </div>
         </div>
       </nav>
