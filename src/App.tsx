@@ -302,6 +302,13 @@ const App: React.FC = () => {
                   locationSection.scrollIntoView({ behavior: 'smooth' });
                 }
               }}>Location</a>
+              <a href="#floor-plan" className="text-gray-900 hover:text-gray-600 transition-colors" onClick={(e) => {
+                e.preventDefault();
+                const floorPlanSection = document.getElementById('floor-plan');
+                if (floorPlanSection) {
+                  floorPlanSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}>Floor Plan</a>
               <button className="bg-accent text-white px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold hover:bg-blue-600 transition duration-300">
                 Enquire Now
               </button>
@@ -390,7 +397,7 @@ const App: React.FC = () => {
           </div>
 
           {/* Floor Plan */}
-          <div className="mb-16">
+          <div id="floor-plan" className="mb-16">
             <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 mb-12 sm:mb-16">
               Floor Plan
             </h3>
