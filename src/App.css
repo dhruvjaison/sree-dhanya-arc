@@ -36,3 +36,73 @@
     transform: rotate(360deg);
   }
 }
+
+/* Logo Styles */
+.logo-button {
+  position: relative;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+  transition: all 0.3s ease;
+}
+
+.logo-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.logo-button:active {
+  transform: scale(0.98);
+}
+
+.logo-button img {
+  transition: filter 0.3s ease;
+}
+
+.logo-button:hover img {
+  filter: brightness(1.1);
+}
+
+@media (max-width: 640px) {
+  .logo-button {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Carousel Styles */
+.slick-prev,
+.slick-next {
+  width: 40px;
+  height: 40px;
+  z-index: 1;
+}
+
+.slick-prev {
+  left: -5px;
+}
+
+.slick-next {
+  right: -5px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-size: 40px;
+  color: #4B5563;
+  opacity: 0.75;
+}
+
+.slick-dots {
+  bottom: -30px;
+}
+
+.slick-dots li button:before {
+  font-size: 12px;
+  color: #4B5563;
+  opacity: 0.5;
+}
+
+.slick-dots li.slick-active button:before {
+  opacity: 1;
+  color: #4B5563;
+}
