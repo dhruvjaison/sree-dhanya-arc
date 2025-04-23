@@ -3,6 +3,8 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './App.css';
+import { Link } from 'react-router-dom';
+import EnquiryModal from './components/EnquiryModal';
 
 interface ImageDetails {
   src: string;
@@ -141,6 +143,7 @@ const GalleryCarousel: React.FC<{
 
 const App: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<ImageDetails | null>(null);
+  const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false);
 
   useEffect(() => {
     document.title = 'Sree Dhanya ARC – Premium Residence by Jai&Sons';
@@ -294,52 +297,48 @@ const App: React.FC = () => {
             </button>
             <div className="flex items-center space-x-4">
               <a href="#gallery" className="text-gray-900 hover:text-gray-600 transition-colors">Gallery</a>
-              <a href="#location" className="text-gray-900 hover:text-gray-600 transition-colors" onClick={(e) => {
-                e.preventDefault();
-                const locationSection = document.getElementById('location');
-                if (locationSection) {
-                  locationSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}>Location</a>
-              <a href="#floor-plan" className="text-gray-900 hover:text-gray-600 transition-colors" onClick={(e) => {
-                e.preventDefault();
-                const floorPlanSection = document.getElementById('floor-plan');
-                if (floorPlanSection) {
-                  floorPlanSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}>Floor Plan</a>
-              <button className="bg-accent text-white px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold hover:bg-blue-600 transition duration-300">
+              <a href="#location" className="text-gray-900 hover:text-gray-600 transition-colors">Location</a>
+              <a href="#floor-plan" className="text-gray-900 hover:text-gray-600 transition-colors">Floor Plan</a>
+              <a href="#enquire-section" className="bg-accent text-white px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold hover:bg-blue-600 transition duration-300 enquire-scroll-button">
                 Enquire Now
-              </button>
+              </a>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center">
-        <div className="absolute inset-0">
+      <section className="relative h-screen w-full mt-16">
+        <div className="absolute inset-0 w-full h-full">
           <img 
             src="/images/arc-main.png" 
             alt="Sree Dhanya ARC Building" 
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover"
+            style={{ 
+              objectFit: 'cover',
+              objectPosition: 'center',
+              minHeight: '100vh',
+              width: '100%'
+            }}
           />
-          <div className="absolute inset-0 bg-black/5"></div>
+          <div className="absolute inset-0 bg-black/30"></div>
         </div>
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center text-white">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 tracking-tight drop-shadow-lg">
-              Sree Dhanya ARC
-            </h1>
-            <p className="text-xl sm:text-2xl md:text-3xl font-light mb-10 text-white drop-shadow-lg">
-              Luxury Living in the Heart of the City
-            </p>
-            <button 
-              onClick={() => scrollToSection('gallery')}
-              className="bg-white/90 backdrop-blur-sm text-gray-900 px-8 sm:px-10 py-4 rounded-full text-lg sm:text-xl font-medium hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              View Arc Homes
-            </button>
+        <div className="relative h-full flex items-center justify-center">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
+            <div className="max-w-3xl mx-auto text-center text-white">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 tracking-tight drop-shadow-lg">
+                Sree Dhanya ARC
+              </h1>
+              <p className="text-xl sm:text-2xl md:text-3xl font-light mb-10 text-white drop-shadow-lg">
+                Luxury Living in the Heart of the City
+              </p>
+              <button 
+                onClick={() => scrollToSection('gallery')}
+                className="bg-white/90 backdrop-blur-sm text-gray-900 px-8 sm:px-10 py-4 rounded-full text-lg sm:text-xl font-medium hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                View Arc Homes
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -561,7 +560,7 @@ const App: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="w-full bg-black text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
+      <section id="enquire-section" className="w-full bg-black text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
@@ -570,7 +569,10 @@ const App: React.FC = () => {
             <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8">
               Secure your premium residence at Sree Dhanya ARC today. Limited units available.
             </p>
-            <button className="bg-white text-black px-6 sm:px-8 py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-gray-100 transition duration-300">
+            <button 
+              onClick={() => setIsEnquiryModalOpen(true)}
+              className="bg-white text-black px-6 sm:px-8 py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-gray-100 transition duration-300"
+            >
               Enquire Now
             </button>
           </div>
@@ -592,6 +594,11 @@ const App: React.FC = () => {
           onClose={() => setSelectedImage(null)}
         />
       )}
+
+      <EnquiryModal 
+        isOpen={isEnquiryModalOpen} 
+        onClose={() => setIsEnquiryModalOpen(false)} 
+      />
     </div>
   );
 };
