@@ -5,7 +5,8 @@ interface EnquiryModalProps {
   onClose: () => void;
 }
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtNAfuD23S8hT5cCZv9GNCU3zBaX3lgXh2U3Hq5KA2N5bKlyGTNaRVweErLB7nQdZh/exec';
+// Replace this with your actual Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxHIkoNyseLo-Cz9T4FOFYGXOlNO5WvEvoDiQ8Fdt5owjS8X67pMqBlUqea5ZVjCAi/exec';
 
 const EnquiryModal: React.FC<EnquiryModalProps> = ({ isOpen, onClose }) => {
   const [name, setName] = useState('');
@@ -13,29 +14,47 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({ isOpen, onClose }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
+    setErrorMessage('');
+
     try {
-      const res = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, message }),
+      // Create URL with parameters
+      const url = new URL(GOOGLE_SCRIPT_URL);
+      url.searchParams.append('name', name);
+      url.searchParams.append('email', email);
+      url.searchParams.append('phone', phone);
+      url.searchParams.append('message', message);
+
+      // Send GET request to Google Apps Script
+      const response = await fetch(url.toString(), {
+        method: 'GET',
+        mode: 'no-cors', // This is important for Google Apps Script
       });
-      if (res.ok) {
-        setStatus('success');
-        setName(''); setEmail(''); setPhone(''); setMessage('');
-        setTimeout(() => {
-          onClose();
-          // Show success toast here if needed
-        }, 1500);
-      } else {
-        throw new Error(`HTTP ${res.status}`);
-      }
+
+      // Since we're using no-cors, we won't get response details
+      // We'll assume success if we get here
+      setStatus('success');
+      setName('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
+      
+      // Show success message and close modal after delay
+      setTimeout(() => {
+        onClose();
+        setStatus('idle');
+      }, 2000);
+
     } catch (err) {
-      console.error(err);
+      console.error('Form submission error:', err);
       setStatus('error');
+      setErrorMessage(
+        'Unable to submit form. Please try again or contact us directly at manianj@hotmail.com'
+      );
     }
   };
 
@@ -67,48 +86,81 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({ isOpen, onClose }) => {
           <h2 className="text-2xl font-bold text-primary mb-2">Inquire about ARC</h2>
           <p className="text-gray-600 mb-6">Please leave a message if you are interested!</p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="text"
-              required
-              placeholder="Your full name"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className="w-full p-3 border rounded-lg"
-            />
-            <input
-              type="email"
-              required
-              placeholder="you@example.com"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full p-3 border rounded-lg"
-            />
-            <input
-              type="tel"
-              required
-              placeholder="e.g. +1 234 567 890"
-              value={phone}
-              onChange={e => setPhone(e.target.value)}
-              className="w-full p-3 border rounded-lg"
-            />
-            <textarea
-              placeholder="Your message (optional)"
-              value={message}
-              onChange={e => setMessage(e.target.value)}
-              className="w-full p-3 border rounded-lg h-32"
-            />
+          <form id="enquiry-form" onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <input
+                type="text"
+                required
+                placeholder="Your full name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                disabled={status === 'submitting'}
+              />
+            </div>
+            
+            <div>
+              <input
+                type="email"
+                required
+                placeholder="you@example.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                disabled={status === 'submitting'}
+              />
+            </div>
+            
+            <div>
+              <input
+                type="tel"
+                required
+                placeholder="e.g. +1 234 567 890"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                disabled={status === 'submitting'}
+              />
+            </div>
+            
+            <div>
+              <textarea
+                placeholder="Your message (optional)"
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                className="w-full p-3 border rounded-lg h-32 focus:ring-2 focus:ring-primary focus:border-transparent"
+                disabled={status === 'submitting'}
+              />
+            </div>
 
             {status === 'error' && (
-              <p className="text-red-600 text-sm">Oops! Something went wrong. Please try again.</p>
+              <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+                {errorMessage || 'Something went wrong. Please try again.'}
+              </div>
+            )}
+
+            {status === 'success' && (
+              <div className="text-green-600 text-sm bg-green-50 p-3 rounded-lg">
+                Thank you for your inquiry! We'll get back to you soon.
+              </div>
             )}
 
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="w-full bg-black text-white font-semibold px-6 py-3 rounded hover:bg-gray-800 transition duration-300"
+              className={`w-full bg-black text-white font-semibold px-6 py-3 rounded hover:bg-gray-800 transition duration-300 ${
+                status === 'submitting' ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
             >
-              {status === 'submitting' ? 'Submitting...' : 'Submit Inquiry'}
+              {status === 'submitting' ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Submitting...
+                </span>
+              ) : 'Submit Inquiry'}
             </button>
           </form>
         </div>

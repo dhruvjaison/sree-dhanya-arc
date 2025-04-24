@@ -312,7 +312,7 @@ const App: React.FC = () => {
         <div className="absolute inset-0 w-full h-full">
           <img 
             src="/images/arc-main.png" 
-            alt="Sree Dhanya ARC Building" 
+            alt="ARC Building" 
             className="w-full h-full object-cover"
             style={{ 
               objectFit: 'cover',
@@ -321,23 +321,34 @@ const App: React.FC = () => {
               width: '100%'
             }}
           />
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50"></div>
         </div>
         <div className="relative h-full flex items-center justify-center">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
-            <div className="max-w-3xl mx-auto text-center text-white">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 tracking-tight drop-shadow-lg">
-                Sree Dhanya ARC
+            <div className="max-w-4xl mx-auto text-center text-white">
+              <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 tracking-tight drop-shadow-lg">
+                ARC
               </h1>
-              <p className="text-xl sm:text-2xl md:text-3xl font-light mb-10 text-white drop-shadow-lg">
+              <p className="text-xl sm:text-2xl md:text-3xl font-light mb-6 text-white/90 drop-shadow-lg max-w-2xl mx-auto">
                 Luxury Living in the Heart of the City
               </p>
-              <button 
-                onClick={() => scrollToSection('gallery')}
-                className="bg-white/90 backdrop-blur-sm text-gray-900 px-8 sm:px-10 py-4 rounded-full text-lg sm:text-xl font-medium hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                View Arc Homes
-              </button>
+              <p className="text-base sm:text-lg text-white/80 mb-10 max-w-xl mx-auto">
+                Premium 3 BHK Residences | Rooftop Infinity Pool | Sky Lounge
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button 
+                  onClick={() => scrollToSection('gallery')}
+                  className="bg-white/90 backdrop-blur-sm text-gray-900 px-8 sm:px-10 py-4 rounded-full text-lg sm:text-xl font-medium hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl w-full sm:w-auto"
+                >
+                  View Arc Homes
+                </button>
+                <button 
+                  onClick={() => scrollToSection('enquire-section')}
+                  className="bg-transparent border-2 border-white text-white px-8 sm:px-10 py-4 rounded-full text-lg sm:text-xl font-medium hover:bg-white/10 transition-all duration-300 w-full sm:w-auto"
+                >
+                  Enquire Now
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -425,68 +436,94 @@ const App: React.FC = () => {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-16 sm:py-20 bg-white px-4 sm:px-6 lg:px-8">
+      <section className="py-16 sm:py-20 bg-gray-50 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-primary mb-8 sm:mb-12">
-            Why Choose Sree Dhanya ARC
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-primary mb-4">
+            Why Choose ARC?
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {[
-              {
-                title: '3 BHK Premium Units',
-                description: 'Spacious living with premium finishes',
-                icon: '🏠'
-              },
-              {
-                title: 'Rooftop Infinity Pool',
-                description: 'Luxurious swimming with city views',
-                icon: '🏊'
-              },
-              {
-                title: 'Game Room & Lounge',
-                description: 'Perfect space for entertainment',
-                icon: ''
-              },
-              {
-                title: 'Private Mini Theater',
-                description: 'State-of-the-art home cinema',
-                icon: '🎬'
-              },
-              {
-                title: 'Fully-Equipped Gym',
-                description: 'Modern fitness facilities',
-                icon: '💪'
-              },
-              {
-                title: "Children's Play Area",
-                description: 'Safe space for kids to play',
-                icon: '🎯'
-              },
-              {
-                title: 'Sky Lounge & Bar',
-                description: 'Elegant socializing space',
-                icon: '🍸'
-              },
-              {
-                title: '4 Spacious Balconies',
-                description: 'Enjoy panoramic city views',
-                icon: '🌆'
-              },
-              {
-                title: '1220 Sqft Carpet Area',
-                description: 'Generous living space',
-                icon: '📏'
-              }
-            ].map((feature, index) => (
-              <div 
-                key={index} 
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 border border-gray-100"
-              >
-                <div className="text-3xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-2 text-primary">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+          <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12 text-lg">
+            Experience luxury living at its finest with our thoughtfully designed spaces and premium amenities
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
+            {/* Luxury Living Features */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-semibold text-primary border-b border-gray-200 pb-2 mb-4">
+                Luxury Living
+              </h3>
+              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
+                <h4 className="text-lg font-semibold mb-2">Premium 3 BHK Units</h4>
+                <p className="text-gray-600">
+                  Spacious 1220 sq ft apartments with high-end finishes and 4 private balconies offering panoramic city views
+                </p>
               </div>
-            ))}
+              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
+                <h4 className="text-lg font-semibold mb-2">Modern Design</h4>
+                <p className="text-gray-600">
+                  Contemporary architecture with premium materials and thoughtful layouts for optimal comfort
+                </p>
+              </div>
+            </div>
+
+            {/* Lifestyle Amenities */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-semibold text-primary border-b border-gray-200 pb-2 mb-4">
+                Premium Amenities
+              </h3>
+              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
+                <h4 className="text-lg font-semibold mb-2">Rooftop Infinity Pool</h4>
+                <p className="text-gray-600">
+                  Stunning infinity pool with panoramic city views, perfect for relaxation and entertainment
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
+                <h4 className="text-lg font-semibold mb-2">Sky Lounge & Entertainment</h4>
+                <p className="text-gray-600">
+                  Exclusive sky lounge, private theater, and game room for the ultimate leisure experience
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
+                <h4 className="text-lg font-semibold mb-2">Fitness & Wellness</h4>
+                <p className="text-gray-600">
+                  State-of-the-art gym with modern equipment for maintaining an active lifestyle
+                </p>
+              </div>
+            </div>
+
+            {/* Location & Convenience */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-semibold text-primary border-b border-gray-200 pb-2 mb-4">
+                Location & Security
+              </h3>
+              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
+                <h4 className="text-lg font-semibold mb-2">Prime Location</h4>
+                <p className="text-gray-600">
+                  Minutes from Lulu Mall and Metro Station, surrounded by top schools and hospitals
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
+                <h4 className="text-lg font-semibold mb-2">Family-Friendly</h4>
+                <p className="text-gray-600">
+                  Safe and engaging children's play area with 24/7 security for peace of mind
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Benefits */}
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div className="p-6">
+              <div className="text-lg font-semibold mb-2 text-primary">Quality Construction</div>
+              <p className="text-gray-600">Built to the highest standards with premium materials</p>
+            </div>
+            <div className="p-6">
+              <div className="text-lg font-semibold mb-2 text-primary">Trusted Developer</div>
+              <p className="text-gray-600">By Sree Dhanya Homes, a name synonymous with quality and trust</p>
+            </div>
+            <div className="p-6">
+              <div className="text-lg font-semibold mb-2 text-primary">Smart Investment</div>
+              <p className="text-gray-600">Premium location ensuring long-term value appreciation</p>
+            </div>
           </div>
         </div>
       </section>
@@ -495,7 +532,7 @@ const App: React.FC = () => {
       <section id="location" className="py-16 sm:py-20 bg-white px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-primary mb-8 sm:mb-12">
-            Prime Location
+            Location
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div className="relative overflow-hidden rounded-xl shadow-md cursor-pointer"
