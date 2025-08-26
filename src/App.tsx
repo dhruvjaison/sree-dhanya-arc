@@ -3,7 +3,6 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './App.css';
-import { Link } from 'react-router-dom';
 import EnquiryModal from './components/EnquiryModal';
 
 interface ImageDetails {
@@ -20,16 +19,16 @@ const LightboxModal: React.FC<{
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 animate-fade-up"
       onClick={onClose}
     >
       <div 
-        className="relative max-w-7xl w-full mx-auto"
+        className="relative max-w-7xl w-full mx-auto animate-scale-in"
         onClick={e => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute -top-12 right-0 text-white hover:text-gray-300 text-4xl"
+          className="absolute -top-12 right-0 text-white hover:text-luxury-gold text-4xl transition-colors duration-300"
           aria-label="Close lightbox"
         >
           ×
@@ -38,12 +37,12 @@ const LightboxModal: React.FC<{
           <img
             src={image.src}
             alt={image.alt}
-            className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
+            className="w-full h-auto max-h-[85vh] object-contain"
           />
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent rounded-b-lg">
-            <p className="text-white text-xl font-medium mb-2">{image.alt}</p>
+          <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 to-transparent">
+            <p className="text-white text-xl font-display font-medium mb-2">{image.alt}</p>
             {image.caption && (
-              <p className="text-gray-200 text-base">{image.caption}</p>
+              <p className="text-gray-200 text-base font-body">{image.caption}</p>
             )}
           </div>
         </div>
@@ -64,22 +63,19 @@ const GalleryCarousel: React.FC<{
   if (images.length === 1) {
     const image = images[0];
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div 
-          className="flex flex-col"
+          className="gallery-image h-[500px] sm:h-[600px] animate-fade-up"
           onClick={() => onImageClick(image)}
         >
-          <div className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group">
-            <img 
-              src={image.src}
-              alt={image.alt}
-              className="w-full h-[400px] sm:h-[500px] object-cover transform transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-              <p className="text-lg sm:text-xl font-semibold mb-2">{image.alt}</p>
-              <p className="text-sm sm:text-base">{image.caption}</p>
-            </div>
+          <img 
+            src={image.src}
+            alt={image.alt}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
+            <p className="text-xl sm:text-2xl font-display font-medium mb-2">{image.alt}</p>
+            <p className="text-sm sm:text-base font-body opacity-90">{image.caption}</p>
           </div>
         </div>
       </div>
@@ -90,25 +86,28 @@ const GalleryCarousel: React.FC<{
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 800,
     slidesToShow: images.length < 3 ? 2 : 3,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 5000,
     pauseOnHover: true,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: Math.min(2, images.length),
+          slidesToShow: 2,
           slidesToScroll: 1,
+          infinite: true,
+          dots: true
         }
       },
       {
-        breakpoint: 640,
+        breakpoint: 600,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          initialSlide: 1
         }
       }
     ]
@@ -118,21 +117,20 @@ const GalleryCarousel: React.FC<{
     <div className="relative px-4 sm:px-6">
       <Slider {...settings}>
         {images.map((image, index) => (
-          <div key={index} className="px-2">
-            <div 
-              className="flex flex-col"
+          <div key={index} className="px-3">
+            <div
+              className={`gallery-image h-80 sm:h-96 animate-fade-up stagger-${(index % 5) + 1}`}
               onClick={() => onImageClick(image)}
             >
-              <div className="relative overflow-hidden rounded-xl shadow-md cursor-pointer">
-                <img 
-                  src={image.src}
-                  alt={image.alt}
-                  className="w-full h-64 sm:h-72 object-cover hover:scale-105 transition-transform duration-300"
-                />
+              <img 
+                src={image.src}
+                alt={image.alt}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <p className="text-lg sm:text-xl font-display font-medium mb-2">{image.alt}</p>
+                <p className="text-sm sm:text-base font-body opacity-90">{image.caption}</p>
               </div>
-              <p className="text-center text-sm mt-2 text-gray-700 font-medium">
-                {image.caption}
-              </p>
             </div>
           </div>
         ))}
@@ -144,16 +142,21 @@ const GalleryCarousel: React.FC<{
 const App: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<ImageDetails | null>(null);
   const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    document.title = 'Sree Dhanya ARC – Premium Residence by Jai&Sons';
+    document.title = 'Sree Dhanya ARC – Premium Luxury Residences';
+    
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -164,270 +167,227 @@ const App: React.FC = () => {
   };
 
   const exteriorImages = [
-    { 
-      src: '/images/side.png', 
-      alt: 'Side View',
-      caption: "Contemporary architectural design with premium finishes"
+    {
+      src: '/images/arc-main.png',
+      alt: 'Sree Dhanya ARC Building',
+      caption: "Architectural masterpiece defining luxury living"
     },
-    { 
-      src: '/images/night.png', 
-      alt: 'Night View',
-      caption: "Stunning illuminated facade in the evening"
+    {
+      src: '/images/night.png',
+      alt: 'Sree Dhanya ARC at Night',
+      caption: "Illuminated elegance against the city skyline"
     },
-    { 
-      src: '/images/arc-main.png', 
-      alt: 'Main Entrance',
-      caption: "Grand entrance and driveway"
-    },
-    { 
-      src: '/images/roof.png', 
-      alt: 'Rooftop View',
-      caption: "Panoramic views from the rooftop"
-    },
-    { 
-      src: '/images/balcony.png', 
-      alt: 'Balcony View',
-      caption: "Elegant balconies with panoramic city views"
+    {
+      src: '/images/side.png',
+      alt: 'Sree Dhanya ARC Side View',
+      caption: "Contemporary design meets timeless sophistication"
     }
   ];
 
   const lobbyImages = [
-    { 
-      src: '/images/reception.png', 
-      alt: 'Reception',
-      caption: "24/7 staffed reception with concierge services"
+    {
+      src: '/images/reception.png',
+      alt: 'Grand Reception',
+      caption: "Welcome to unparalleled luxury and service"
     },
-    { 
-      src: '/images/lobby.png', 
+    {
+      src: '/images/lobby.png',
       alt: 'Main Lobby',
-      caption: "Grand entrance lobby with luxury finishes"
+      caption: "Where first impressions become lasting memories"
     }
   ];
 
   const interiorImages = [
-    { 
-      src: '/images/living-room.png', 
-      alt: 'Living Room',
-      caption: "Spacious living areas with premium flooring"
+    {
+      src: '/images/living-room.png',
+      alt: 'Living Spaces',
+      caption: "Expansive living areas designed for modern life"
     },
-    { 
-      src: '/images/kitchen.png', 
-      alt: 'Kitchen',
-      caption: "Modern kitchen with high-end appliances"
+    {
+      src: '/images/kitchen.png',
+      alt: 'Gourmet Kitchen',
+      caption: "Culinary excellence meets sophisticated design"
     },
-    { 
-      src: '/images/master.png', 
-      alt: 'Master Bedroom',
-      caption: "Luxurious master suite"
+    {
+      src: '/images/master.png',
+      alt: 'Master Suite',
+      caption: "Private sanctuary of comfort and elegance"
     },
-    { 
-      src: '/images/closet.png', 
+    {
+      src: '/images/closet.png',
       alt: 'Walk-in Closet',
-      caption: "Custom-designed walk-in closets"
+      caption: "Bespoke storage solutions for luxury living"
     },
-    { 
-      src: '/images/dining.png', 
+    {
+      src: '/images/dining.png',
       alt: 'Dining Area',
-      caption: "Elegant dining space for family gatherings"
+      caption: "Intimate spaces for memorable gatherings"
     },
-    { 
-      src: '/images/balcony.png', 
-      alt: 'Private Balcony',
-      caption: "Spacious private balcony for outdoor living"
-    },
-    { 
-      src: '/images/balcony-surface.png', 
-      alt: 'Balcony Detail',
-      caption: "Premium balcony finishes and details"
+    {
+      src: '/images/balcony.png',
+      alt: 'Private Terrace',
+      caption: "Your personal outdoor oasis in the sky"
     }
   ];
 
   const amenityImages = [
-    { 
-      src: '/images/pool.png', 
+    {
+      src: '/images/pool.png',
       alt: 'Infinity Pool',
-      caption: "Luxurious infinity pool with city views"
+      caption: "Endless horizons meet luxury relaxation"
     },
-    { 
-      src: '/images/bar.png', 
+    {
+      src: '/images/bar.png',
       alt: 'Sky Lounge',
-      caption: "Exclusive sky lounge with panoramic views"
+      caption: "Elevated experiences above the city"
     },
-    { 
-      src: '/images/gym.png', 
-      alt: 'Fitness Center',
-      caption: "State-of-the-art fitness center"
+    {
+      src: '/images/gym.png',
+      alt: 'Fitness Sanctuary',
+      caption: "State-of-the-art wellness facilities"
     },
-    { 
-      src: '/images/game.png', 
-      alt: 'Game Room',
-      caption: "Entertainment and game room"
+    {
+      src: '/images/game.png',
+      alt: 'Entertainment Lounge',
+      caption: "Premium leisure and entertainment spaces"
     },
-    { 
-      src: '/images/playground.png', 
-      alt: 'Kids Playground',
-      caption: "Safe and engaging children's play area"
-    },
-    { 
-      src: '/images/theater.png', 
-      alt: 'Private Theater',
-      caption: "Private cinema with premium seating"
+    {
+      src: '/images/theater.png',
+      alt: 'Private Cinema',
+      caption: "Hollywood-caliber entertainment at home"
     }
   ];
 
   return (
-    <div className="min-h-screen smooth-scroll">
-      {/* Sticky Navbar */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm z-50 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20 sm:h-24">
-            <button 
+    <div className="min-h-screen smooth-scroll bg-white">
+      {/* Premium Navigation */}
+      <nav className={`premium-nav ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <button
               onClick={scrollToTop}
-              className="logo-button flex items-center focus:outline-none group py-2"
+              className="flex items-center focus:outline-none group"
               aria-label="Go to top"
             >
-              <div className="relative overflow-hidden">
-                <img 
-                  src="/images/logo.png" 
-                  alt="Jai&Sons Logo" 
-                  className="h-12 sm:h-14 md:h-16 w-auto object-contain"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
-              </div>
+              <img
+                src="/images/logo.png"
+                alt="Jai&Sons"
+                className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
             </button>
-            <div className="flex items-center space-x-4">
-              <a href="#gallery" className="text-gray-900 hover:text-gray-600 transition-colors">Gallery</a>
-              <a href="#location" className="text-gray-900 hover:text-gray-600 transition-colors">Location</a>
-              <a href="#floor-plan" className="text-gray-900 hover:text-gray-600 transition-colors">Floor Plan</a>
-              <a href="#enquire-section" className="bg-accent text-white px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold hover:bg-blue-600 transition duration-300 enquire-scroll-button">
+            <div className="hidden md:flex items-center space-x-12">
+              <a href="#gallery" className="nav-link">Gallery</a>
+              <a href="#amenities" className="nav-link">Amenities</a>
+              <a href="#location" className="nav-link">Location</a>
+              <a href="#floor-plan" className="nav-link">Floor Plans</a>
+              <button 
+                onClick={() => setIsEnquiryModalOpen(true)}
+                className="btn-primary"
+              >
                 Enquire Now
-              </a>
+              </button>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative h-screen w-full mt-16">
-        <div className="absolute inset-0 w-full h-full">
-          <img 
-            src="/images/arc-main.png" 
-            alt="ARC Building" 
-            className="w-full h-full object-cover"
-            style={{ 
-              objectFit: 'cover',
-              objectPosition: 'center',
-              minHeight: '100vh',
-              width: '100%'
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50"></div>
-        </div>
-        <div className="relative h-full flex items-center justify-center">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
-            <div className="max-w-4xl mx-auto text-center text-white">
-              <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 tracking-tight drop-shadow-lg">
-                ARC
-              </h1>
-              <p className="text-xl sm:text-2xl md:text-3xl font-light mb-6 text-white/90 drop-shadow-lg max-w-2xl mx-auto">
-                Luxury Living in the Heart of the City
-              </p>
-              <p className="text-base sm:text-lg text-white/80 mb-10 max-w-xl mx-auto">
-                Premium 3 BHK Residences | Rooftop Infinity Pool | Sky Lounge
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <button 
-                  onClick={() => scrollToSection('gallery')}
-                  className="bg-white/90 backdrop-blur-sm text-gray-900 px-8 sm:px-10 py-4 rounded-full text-lg sm:text-xl font-medium hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl w-full sm:w-auto"
-                >
-                  View Arc Homes
-                </button>
-                <button 
-                  onClick={() => scrollToSection('enquire-section')}
-                  className="bg-transparent border-2 border-white text-white px-8 sm:px-10 py-4 rounded-full text-lg sm:text-xl font-medium hover:bg-white/10 transition-all duration-300 w-full sm:w-auto"
-                >
-                  Enquire Now
-                </button>
-              </div>
-            </div>
+      <section className="hero-section">
+        <img
+          src="/images/arc-main.png"
+          alt="Sree Dhanya ARC"
+          className="hero-video"
+        />
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1 className="hero-title">Sree Dhanya ARC</h1>
+          <p className="hero-subtitle">Where Luxury Meets Lifestyle</p>
+          <div className="luxury-divider"></div>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <button 
+              onClick={() => scrollToSection('gallery')}
+              className="btn-primary"
+            >
+              Explore Residences
+            </button>
+            <button 
+              onClick={() => setIsEnquiryModalOpen(true)}
+              className="btn-secondary"
+            >
+              Schedule Viewing
+            </button>
           </div>
         </div>
       </section>
 
       {/* Gallery Section */}
-      <section id="gallery" className="bg-gray-100 py-20">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 mb-12 sm:mb-16">
-            Gallery
-          </h2>
+      <section id="gallery" className="section-padding-large bg-warm-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="section-title animate-fade-up">Architectural Excellence</h2>
+            <p className="section-subtitle animate-fade-up stagger-1">
+              Discover spaces that redefine luxury living through thoughtful design and premium finishes
+            </p>
+          </div>
 
           {/* Exterior Views */}
-          <div className="mb-16">
-            <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-8 px-6">
-              Exterior Views
+          <div className="mb-24">
+            <h3 className="text-section-title font-display text-center mb-12 animate-fade-up stagger-2">
+              Iconic Architecture
             </h3>
-            <GalleryCarousel 
-              images={exteriorImages} 
-              onImageClick={setSelectedImage}
-            />
+            <GalleryCarousel images={exteriorImages} onImageClick={setSelectedImage} />
           </div>
 
           {/* Lobby & Common Areas */}
-          <div className="mb-16">
-            <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-8 px-6">
-              Lobby & Common Areas
+          <div className="mb-24">
+            <h3 className="text-section-title font-display text-center mb-12 animate-fade-up stagger-3">
+              Grand Entrance
             </h3>
-            <GalleryCarousel 
-              images={lobbyImages} 
-              onImageClick={setSelectedImage}
-            />
+            <GalleryCarousel images={lobbyImages} onImageClick={setSelectedImage} />
           </div>
 
-          {/* Apartment Spaces */}
-          <div className="mb-16">
-            <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-8 px-6">
-              Apartment Spaces
+          {/* Interior Spaces */}
+          <div className="mb-24">
+            <h3 className="text-section-title font-display text-center mb-12 animate-fade-up stagger-4">
+              Luxury Interiors
             </h3>
-            <GalleryCarousel 
-              images={interiorImages} 
-              onImageClick={setSelectedImage}
-            />
+            <GalleryCarousel images={interiorImages} onImageClick={setSelectedImage} />
           </div>
 
-          {/* Amenities & Lifestyle */}
-          <div className="mb-16">
-            <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-8 px-6">
-              Amenities & Lifestyle
+          {/* Amenities */}
+          <div id="amenities">
+            <h3 className="text-section-title font-display text-center mb-12 animate-fade-up stagger-5">
+              Premium Amenities
             </h3>
-            <GalleryCarousel 
-              images={amenityImages} 
-              onImageClick={setSelectedImage}
-            />
+            <GalleryCarousel images={amenityImages} onImageClick={setSelectedImage} />
           </div>
+        </div>
+      </section>
 
-          {/* Floor Plan */}
-          <div id="floor-plan" className="mb-16">
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 mb-12 sm:mb-16">
-              Floor Plan
-            </h3>
-            <div className="max-w-4xl mx-auto">
-              <div 
-                className="flex flex-col"
-                onClick={() => setSelectedImage({
-                  src: '/images/plan.png',
-                  alt: 'Detailed Floor Plan',
-                  caption: "Thoughtfully designed floor plans optimized for modern living"
-                })}
-              >
-                <div className="relative overflow-hidden rounded-xl shadow-md cursor-pointer">
-                  <img 
-                    src="/images/plan.png"
-                    alt="Detailed Floor Plan"
-                    className="w-full h-auto hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <p className="text-center text-sm mt-2 text-gray-700 font-medium">
-                  Thoughtfully designed floor plans optimized for modern living
+      {/* Floor Plan Section */}
+      <section id="floor-plan" className="section-padding bg-charcoal text-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="section-title text-white animate-fade-up">Floor Plans</h2>
+            <div className="luxury-divider"></div>
+            <p className="section-subtitle text-gray-300 animate-fade-up stagger-1">
+              Thoughtfully designed 3BHK residences that maximize space, light, and luxury
+            </p>
+          </div>
+          
+          <div className="max-w-4xl mx-auto">
+            <div className="luxury-card bg-soft-charcoal border-luxury-gold/20 animate-scale-in">
+              <div className="text-center">
+                <img
+                  src="/images/plan.png"
+                  alt="3BHK Floor Plan"
+                  className="w-full h-auto mb-8 transition-transform duration-500 hover:scale-105"
+                />
+                <h4 className="text-2xl font-display font-medium mb-4 text-luxury-gold">Premium 3BHK Residence</h4>
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  Spacious 3-bedroom apartments featuring premium finishes, modern amenities, 
+                  and panoramic city views. Each residence is designed to offer the perfect 
+                  balance of privacy, comfort, and luxury.
                 </p>
               </div>
             </div>
@@ -435,161 +395,125 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-16 sm:py-20 bg-gray-50 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-primary mb-4">
-            Why Choose ARC?
-          </h2>
-          <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12 text-lg">
-            Experience luxury living at its finest with our thoughtfully designed spaces and premium amenities
-          </p>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
-            {/* Luxury Living Features */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-primary border-b border-gray-200 pb-2 mb-4">
-                Luxury Living
-              </h3>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-                <h4 className="text-lg font-semibold mb-2">Premium 3 BHK Units</h4>
-                <p className="text-gray-600">
-                  Spacious 1220 sq ft apartments with high-end finishes and 4 private balconies offering panoramic city views
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-                <h4 className="text-lg font-semibold mb-2">Modern Design</h4>
-                <p className="text-gray-600">
-                  Contemporary architecture with premium materials and thoughtful layouts for optimal comfort
-                </p>
-              </div>
-            </div>
-
-            {/* Lifestyle Amenities */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-primary border-b border-gray-200 pb-2 mb-4">
-                Premium Amenities
-              </h3>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-                <h4 className="text-lg font-semibold mb-2">Rooftop Infinity Pool</h4>
-                <p className="text-gray-600">
-                  Stunning infinity pool with panoramic city views, perfect for relaxation and entertainment
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-                <h4 className="text-lg font-semibold mb-2">Sky Lounge & Entertainment</h4>
-                <p className="text-gray-600">
-                  Exclusive sky lounge, private theater, and game room for the ultimate leisure experience
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-                <h4 className="text-lg font-semibold mb-2">Fitness & Wellness</h4>
-                <p className="text-gray-600">
-                  State-of-the-art gym with modern equipment for maintaining an active lifestyle
-                </p>
-              </div>
-            </div>
-
-            {/* Location & Convenience */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-primary border-b border-gray-200 pb-2 mb-4">
-                Location & Security
-              </h3>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-                <h4 className="text-lg font-semibold mb-2">Prime Location</h4>
-                <p className="text-gray-600">
-                  Minutes from Lulu Mall and Metro Station, surrounded by top schools and hospitals
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-                <h4 className="text-lg font-semibold mb-2">Family-Friendly</h4>
-                <p className="text-gray-600">
-                  Safe and engaging children's play area with 24/7 security for peace of mind
-                </p>
-              </div>
-            </div>
+      {/* Why Choose ARC Section */}
+      <section className="section-padding bg-cream">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="section-title animate-fade-up">Why Choose Sree Dhanya ARC</h2>
+            <div className="luxury-divider"></div>
+            <p className="section-subtitle animate-fade-up stagger-1">
+              Experience the pinnacle of luxury living with unmatched amenities and prime location
+            </p>
           </div>
 
-          {/* Additional Benefits */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div className="p-6">
-              <div className="text-lg font-semibold mb-2 text-primary">Quality Construction</div>
-              <p className="text-gray-600">Built to the highest standards with premium materials</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="luxury-card animate-fade-up stagger-1">
+              <div className="text-center">
+                <div className="text-5xl mb-6 text-luxury-gold">🏗️</div>
+                <h4 className="text-xl font-display font-medium mb-4">Premium Construction</h4>
+                <p className="text-text-secondary leading-relaxed">
+                  Built with the finest materials and attention to detail, ensuring lasting quality and elegance.
+                </p>
+              </div>
             </div>
-            <div className="p-6">
-              <div className="text-lg font-semibold mb-2 text-primary">Trusted Developer</div>
-              <p className="text-gray-600">By Sree Dhanya Homes, a name synonymous with quality and trust</p>
+
+            <div className="luxury-card animate-fade-up stagger-2">
+              <div className="text-center">
+                <div className="text-5xl mb-6 text-luxury-gold">🌟</div>
+                <h4 className="text-xl font-display font-medium mb-4">Luxury Amenities</h4>
+                <p className="text-text-secondary leading-relaxed">
+                  Infinity pool, sky lounge, private theater, and state-of-the-art fitness center.
+                </p>
+              </div>
             </div>
-            <div className="p-6">
-              <div className="text-lg font-semibold mb-2 text-primary">Smart Investment</div>
-              <p className="text-gray-600">Premium location ensuring long-term value appreciation</p>
+
+            <div className="luxury-card animate-fade-up stagger-3">
+              <div className="text-center">
+                <div className="text-5xl mb-6 text-luxury-gold">📍</div>
+                <h4 className="text-xl font-display font-medium mb-4">Prime Location</h4>
+                <p className="text-text-secondary leading-relaxed">
+                  Strategically located with easy access to business districts, shopping, and entertainment.
+                </p>
+              </div>
+            </div>
+
+            <div className="luxury-card animate-fade-up stagger-4">
+              <div className="text-center">
+                <div className="text-5xl mb-6 text-luxury-gold">🔒</div>
+                <h4 className="text-xl font-display font-medium mb-4">Security & Privacy</h4>
+                <p className="text-text-secondary leading-relaxed">
+                  24/7 security with advanced surveillance systems ensuring complete peace of mind.
+                </p>
+              </div>
+            </div>
+
+            <div className="luxury-card animate-fade-up stagger-5">
+              <div className="text-center">
+                <div className="text-5xl mb-6 text-luxury-gold">🌿</div>
+                <h4 className="text-xl font-display font-medium mb-4">Green Living</h4>
+                <p className="text-text-secondary leading-relaxed">
+                  Sustainable design with energy-efficient systems and landscaped gardens.
+                </p>
+              </div>
+            </div>
+
+            <div className="luxury-card animate-fade-up stagger-1">
+              <div className="text-center">
+                <div className="text-5xl mb-6 text-luxury-gold">🏆</div>
+                <h4 className="text-xl font-display font-medium mb-4">Award-Winning Design</h4>
+                <p className="text-text-secondary leading-relaxed">
+                  Architecturally acclaimed design that sets new standards for luxury living.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Location Section */}
-      <section id="location" className="py-16 sm:py-20 bg-white px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-primary mb-8 sm:mb-12">
-            Location
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-center">
-            <div className="relative overflow-hidden rounded-xl shadow-md cursor-pointer"
-              onClick={() => setSelectedImage({
-                src: '/images/location.png',
-                alt: 'Strategic Location',
-                caption: "Perfectly situated in the heart of the city with excellent connectivity"
-              })}
-            >
-              <img 
+      <section id="location" className="section-padding bg-charcoal text-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="section-title text-white animate-fade-up">Prime Location</h2>
+            <div className="luxury-divider"></div>
+            <p className="section-subtitle text-gray-300 animate-fade-up stagger-1">
+              Perfectly positioned for the modern urban lifestyle
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="animate-fade-left">
+              <img
                 src="/images/location.png"
-                alt="Strategic Location"
-                className="w-full h-auto hover:scale-105 transition-transform duration-300"
+                alt="Location Map"
+                className="w-full h-auto rounded-lg shadow-luxury"
               />
             </div>
-            <div className="space-y-4 sm:space-y-6">
-              <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
-                Strategically located near Sankar Road and Raja Kesavadas N.S.S. School, 
-                Sree Dhanya ARC offers the perfect blend of convenience and connectivity.
-              </p>
-              <ul className="space-y-3 sm:space-y-4 mb-6">
-                <li className="flex items-start">
-                  <span className="text-accent mr-3">•</span>
-                  <span className="text-gray-700">10 min to Lulu Mall</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-accent mr-3">•</span>
-                  <span className="text-gray-700">3 min to Metro Station</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-accent mr-3">•</span>
-                  <span className="text-gray-700">Surrounded by top schools and hospitals</span>
-                </li>
-              </ul>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a 
-                  href="https://www.google.com/maps?q=8.514194,76.971500" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-primary text-white rounded-full hover:bg-primary/90 transition duration-300 shadow-md"
-                >
-                  <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                  </svg>
-                  Open in Google Maps
-                </a>
-                <a 
-                  href="http://maps.apple.com/?ll=8.514194,76.971500&q=Sree+Dhanya+ARC" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 border-2 border-primary text-primary rounded-full hover:bg-primary hover:text-white transition duration-300"
-                >
-                  <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                  </svg>
-                  Open in Apple Maps
-                </a>
+            <div className="animate-fade-right">
+              <h3 className="text-2xl font-display font-medium mb-6 text-luxury-gold">
+                Connected to Everything That Matters
+              </h3>
+              <div className="space-y-4 text-gray-300">
+                <p className="flex items-center">
+                  <span className="text-luxury-gold mr-3">•</span>
+                  5 minutes to business district
+                </p>
+                <p className="flex items-center">
+                  <span className="text-luxury-gold mr-3">•</span>
+                  Walking distance to premium shopping
+                </p>
+                <p className="flex items-center">
+                  <span className="text-luxury-gold mr-3">•</span>
+                  Close to top educational institutions
+                </p>
+                <p className="flex items-center">
+                  <span className="text-luxury-gold mr-3">•</span>
+                  Easy access to major highways
+                </p>
+                <p className="flex items-center">
+                  <span className="text-luxury-gold mr-3">•</span>
+                  Near healthcare facilities
+                </p>
               </div>
             </div>
           </div>
@@ -597,41 +521,68 @@ const App: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section id="enquire-section" className="w-full bg-black text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
-              Ready to Own Your Dream Home?
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8">
-              Secure your premium residence at Sree Dhanya ARC today. Limited units available.
-            </p>
+      <section className="section-padding bg-luxury-gold text-white text-center">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-4xl md:text-5xl font-display font-light mb-6 animate-fade-up">
+            Experience Luxury Living
+          </h2>
+          <p className="text-xl mb-12 opacity-90 animate-fade-up stagger-1">
+            Schedule a private viewing and discover your new home at Sree Dhanya ARC
+          </p>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button 
               onClick={() => setIsEnquiryModalOpen(true)}
-              className="bg-white text-black px-6 sm:px-8 py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-gray-100 transition duration-300"
+              className="bg-white text-luxury-gold hover:bg-gray-100 px-8 py-4 font-medium text-lg transition-all duration-300 hover:-translate-y-1 animate-fade-up stagger-2"
             >
-              Enquire Now
+              Schedule Viewing
+            </button>
+            <button 
+              onClick={() => scrollToSection('gallery')}
+              className="border-2 border-white text-white hover:bg-white hover:text-luxury-gold px-8 py-4 font-medium text-lg transition-all duration-300 hover:-translate-y-1 animate-fade-up stagger-3"
+            >
+              Explore Gallery
             </button>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto text-center">
-          <p className="text-sm sm:text-base">
-            © 2025 Jai&Sons Real Estate Group. All rights reserved.
-          </p>
+      <footer className="bg-charcoal text-white py-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div>
+              <img
+                src="/images/logo.png"
+                alt="Jai&Sons"
+                className="h-12 w-auto mb-6"
+              />
+              <p className="text-gray-400 leading-relaxed">
+                Crafting exceptional living spaces that define luxury and comfort.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-lg font-display font-medium mb-6 text-luxury-gold">Contact</h4>
+              <div className="space-y-3 text-gray-400">
+                <p>📧 info@jaisonsbuilders.com</p>
+                <p>📞 +91 XXX XXX XXXX</p>
+                <p>📍 Bangalore, India</p>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-lg font-display font-medium mb-6 text-luxury-gold">Follow Us</h4>
+              <div className="space-y-3 text-gray-400">
+                <p>Connect with us on social media for updates and exclusive content.</p>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 Jai&Sons Builders. All rights reserved.</p>
+          </div>
         </div>
       </footer>
 
-      {selectedImage && (
-        <LightboxModal
-          image={selectedImage}
-          onClose={() => setSelectedImage(null)}
-        />
-      )}
-
+      {/* Modals */}
+      <LightboxModal image={selectedImage} onClose={() => setSelectedImage(null)} />
       <EnquiryModal 
         isOpen={isEnquiryModalOpen} 
         onClose={() => setIsEnquiryModalOpen(false)} 
